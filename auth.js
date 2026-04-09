@@ -98,11 +98,26 @@ if(!loginInput.includes("@")){
 
   //se o usuário inserir dados não cadastrados essa mensagem irá aparecer;
   //caso contrário, ele entra no sistema (presenca.html);
-  if(error){
+  /*if(error){
     document.getElementById("msg").innerText = "Email/Telefone ou senha inválidos"; //caso o usuário insira dados não cadastrados essa mensagem irá aparecer
   }else{
     window.location.href = "presenca.html"; 
-  }
+  }*/
+
+  const { data: sessionData } = await supabaseClient.auth.getSession();
+const userId = sessionData.session.user.id;
+
+const { data: usuario } = await supabaseClient
+  .from("usuarios")
+  .select("tipo")
+  .eq("id", userId)
+  .single();
+
+if(usuario.tipo === "admin"){
+  window.location.href = "admin.html";
+}else{
+  window.location.href = "presenca.html";
+}
 }
 
 

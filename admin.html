@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Motorista</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="card">
+  <h2>Presenças de Hoje 🚌</h2>
+  <div id="lista">Carregando...</div>
+  <br>
+  <button onclick="logout()">Sair</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="auth.js"></script>
+
+<script>
+async function carregarPresencasHoje(){
+
+  const { data: session } = await supabaseClient.auth.getSession();
+
+  if(!session.session){
+    window.location.href = "login.html";
+    return;
+  }
+
+  const hoje = new Date().toISOString().split("T")[0];
+
+  const { data, error } = await supabaseClient
+    .from("presencas")
+    .select(`
+      data,
+      hora,
+      usuarios ( email, telefone, instituicao )
+    `)
+    .eq("data", hoje)
+    .order("hora", { ascending:true });
+
+  const lista = document.getElementById("lista");
+
+  if(!data || data.length === 0){
+    lista.innerHTML = "<p>Nenhuma presença hoje.</p>";
+    return;
+  }
+
+  lista.innerHTML = data.map(p =>
+    `<p>🕒 ${p.hora} — ${p.usuarios.email} (${p.usuarios.telefone})</p>`
+  ).join("");
+}
+
+carregarPresencasHoje();
+</script>
+
+</body>
+</html>
