@@ -34,7 +34,7 @@ async function cadastrar(){
 
   if(error){
     document.getElementById("msg").innerText = error.message;
-    return;
+    return; 
   }
 
   // ⚠️ esperar sessão ficar ativa
@@ -97,7 +97,7 @@ if(!loginInput.includes("@")){
   });
 
   //se o usuário inserir dados não cadastrados essa mensagem irá aparecer;
-  //caso contrário, ele entra no sistema (index.html);
+  //caso contrário, ele entra no sistema (presenca.html);
   if(error){
     document.getElementById("msg").innerText = "Email/Telefone ou senha inválidos"; //caso o usuário insira dados não cadastrados essa mensagem irá aparecer
   }else{
