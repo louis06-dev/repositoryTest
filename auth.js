@@ -56,7 +56,7 @@ async function cadastrar(){
 
     //tempo de espera após criar a conta
     setTimeout(() => {
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     }, 2000);
 }
 
@@ -109,7 +109,7 @@ if(!loginInput.includes("@")){
 // ================= LOGOUT =================
 async function logout(){
   await supabaseClient.auth.signOut();
-  window.location.href = "index.html";
+  window.location.href = "login.html";
 }
 
 
@@ -124,7 +124,7 @@ async function marcarPresenca(){
   const { data } = await supabaseClient.auth.getSession();
 
   if(!data.session){
-    window.location.href = "index.html";
+    window.location.href = "login.html";
     return;
   }
 
@@ -166,7 +166,7 @@ async function carregarHistorico(){
   const { data } = await supabaseClient.auth.getSession();
 
   if(!data.session){
-    window.location.href = "index.html";
+    window.location.href = "login.html";
     return;
   }
 

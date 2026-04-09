@@ -30,7 +30,7 @@ async function confirmarPresenca(tipo){
   const user = data.user;
 
   if(!user){
-    window.location.href = "index.html";
+    window.location.href = "login.html";
     return;
   }
 
