@@ -203,3 +203,60 @@ async function carregarHistorico(){
     `<p>📅 ${p.data_presenca}</p>`
   ).join("");
 }
+
+async function carregarPresencasAdmin(){
+
+  const { data: sessionData } = await supabaseClient.auth.getSession();
+
+  if(!sessionData.session){
+    window.location.href = "login.html";
+    return;
+  }
+
+  const lista = document.getElementById("lista");
+  lista.innerHTML = "Carregando presenças...";
+
+  const { data, error } = await supabaseClient
+    .from("presencas")
+    .select(`
+      data_presenca,
+      usuarios (
+        email,
+        telefone,
+        instituicao
+      )
+    `)
+    .order("data_presenca", { ascending:false });
+
+  // 🔴 MOSTRAR ERRO NA TELA (antes estava escondido!)
+  if(error){
+    console.log(error);
+    lista.innerHTML = "Erro ao carregar presenças: " + error.message;
+    return;
+  }
+
+  if(!data || data.length === 0){
+    lista.innerHTML = "Nenhuma presença encontrada.";
+    return;
+  }
+
+  lista.innerHTML = "";
+
+  data.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <p><b>Email:</b> ${p.usuarios.email}</p>
+      <p><b>Telefone:</b> ${p.usuarios.telefone}</p>
+      <p><b>Instituição:</b> ${p.usuarios.instituicao}</p>
+      <p><b>Data:</b> ${p.data_presenca}</p>
+      <hr>
+    `;
+
+    lista.appendChild(div);
+  });
+
+}
+
+window.carregarPresencasAdmin = carregarPresencasAdmin;
