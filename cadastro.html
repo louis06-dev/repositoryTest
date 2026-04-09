@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Cadastro</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="card">
+  <h2>Criar Conta</h2>
+
+  <input id="email" placeholder="Email">
+  <input id="telefone" placeholder="Telefone">
+  <input id="cpf" placeholder="CPF">
+  <input id="instituicao" placeholder="Instituição de ensino">
+  <input id="senha" type="password" placeholder="Senha" required>
+  <input id="confirmarSenha" type="password" placeholder="Confirme a senha" required>
+
+  <button onclick="cadastrar()">Cadastrar</button>
+
+  <p>Já tem conta? <a href="index.html">Entrar</a></p>
+  <p id="msg"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="auth.js"></script>
+</body>
+</html>

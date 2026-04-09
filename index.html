@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<title>Login</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+
+<div class="card">
+  <h2>CONTROLE DE PRESENÇA 2K26</h2>
+
+  <input id="login" placeholder="Email ou telefone">
+  <input id="senha" type="password" placeholder="Senha">
+
+  <button onclick="login()">Entrar</button>
+
+  <p>Não possui conta? <a href="cadastro.html">Cadastrar</a></p>
+  <p id="msg"></p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="auth.js"></script>
+</body>
+</html>
