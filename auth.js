@@ -117,3 +117,78 @@ async function logout(){
 window.login = login;
 window.cadastrar = cadastrar;
 window.logout = logout;
+
+// ================= MARCAR PRESENÇA =================
+async function marcarPresenca(){
+
+  const { data } = await supabaseClient.auth.getSession();
+
+  if(!data.session){
+    window.location.href = "index.html";
+    return;
+  }
+
+  const userId = data.session.user.id;
+
+  const hoje = new Date();
+  const dataHoje = hoje.toISOString().split("T")[0];
+  const horaAgora = hoje.toTimeString().split(" ")[0];
+
+  // verificar se já marcou hoje
+  const { data: jaExiste } = await supabaseClient
+    .from("presencas")
+    .select("*")
+    .eq("user_id", userId)
+    .eq("data", dataHoje)
+    .single();
+
+  if(jaExiste){
+    document.getElementById("msg").innerText = "Você já marcou presença hoje ✔️";
+    return;
+  }
+
+  const { error } = await supabaseClient
+    .from("presencas")
+    .insert({
+      user_id: userId,
+      data: dataHoje,
+      hora: horaAgora
+    });
+
+  document.getElementById("msg").innerText =
+    error ? error.message : "Presença registrada com sucesso 🎉";
+}
+
+
+// ================= HISTÓRICO =================
+async function carregarHistorico(){
+
+  const { data } = await supabaseClient.auth.getSession();
+
+  if(!data.session){
+    window.location.href = "index.html";
+    return;
+  }
+
+  const userId = data.session.user.id;
+
+  const { data: presencas } = await supabaseClient
+    .from("presencas")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending:false });
+
+  const lista = document.getElementById("lista");
+
+  if(!presencas || presencas.length === 0){
+    lista.innerHTML = "<p>Nenhuma presença registrada.</p>";
+    return;
+  }
+
+  lista.innerHTML = presencas.map(p =>
+    `<p>📅 ${p.data} — ⏰ ${p.hora}</p>`
+  ).join("");
+}
+
+window.marcarPresenca = marcarPresenca;
+window.carregarHistorico = carregarHistorico;

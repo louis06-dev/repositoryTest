@@ -2,32 +2,45 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Confirmar presença</title>
-<link rel="stylesheet" href="style.css">
+<title>Registrar Presença</title>
+<link rel="stylesheet" href="estilo.css">
 </head>
-
-<body style="display:none">
-
-<button onclick="logout()" class="sair">Sair</button>
+<body>
 
 <div class="card">
-  <h2>Confirmar presença 🚌</h2>
+  <h2>Controle de Presença</h2>
 
-  <h3>IDA (ir para faculdade)</h3>
-  <button onclick="confirmarIda()">Confirmar ida</button>
+  <button onclick="marcarPresenca()">Marcar presença de hoje</button>
+
+  <p id="msg"></p>
 
   <hr>
 
-  <h3>VOLTA (opcional)</h3>
-  <button onclick="confirmarVolta()">Confirmar volta</button>
+  <h3>Meu histórico</h3>
+  <div id="lista">Carregando...</div>
 
-  <p id="msg"></p>
+  <br>
+  <button onclick="logout()">Sair</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-<script src="session.js"></script>
-<script src="app.js"></script>
-<script>protegerPagina();</script>
+<script src="auth.js"></script>
+
+<script>
+// 🔐 proteger página
+async function protegerPagina(){
+  const { data } = await supabaseClient.auth.getSession();
+
+  if(!data.session){
+    window.location.href = "login.html";
+    return;
+  }
+
+  carregarHistorico();
+}
+
+protegerPagina();
+</script>
 
 </body>
 </html>
