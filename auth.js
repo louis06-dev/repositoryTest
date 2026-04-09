@@ -214,42 +214,52 @@ async function carregarPresencasAdmin(){
   }
 
   const lista = document.getElementById("lista");
-  lista.innerHTML = "Carregando presenças...";
+  lista.innerHTML = "Carregando...";
 
-  const { data, error } = await supabaseClient
-    .from("presencas")
-    .select(`
-      data_presenca,
-      usuarios (
-        email,
-        telefone,
-        instituicao
-      )
-    `)
-    .order("data_presenca", { ascending:false });
+  // 1️⃣ Buscar presenças
+  const { data: presencas, error: erroPresencas } =
+    await supabaseClient
+      .from("presencas")
+      .select("*")
+      .order("data_presenca", { ascending:false });
 
-  // 🔴 MOSTRAR ERRO NA TELA (antes estava escondido!)
-  if(error){
-    console.log(error);
-    lista.innerHTML = "Erro ao carregar presenças: " + error.message;
+  if(erroPresencas){
+    lista.innerHTML = erroPresencas.message;
+    console.log(erroPresencas);
     return;
   }
 
-  if(!data || data.length === 0){
+  if(!presencas || presencas.length === 0){
     lista.innerHTML = "Nenhuma presença encontrada.";
     return;
   }
 
+  // 2️⃣ Buscar usuários
+  const { data: usuarios, error: erroUsuarios } =
+    await supabaseClient
+      .from("usuarios")
+      .select("id, email, telefone, instituicao");
+
+  if(erroUsuarios){
+    lista.innerHTML = erroUsuarios.message;
+    console.log(erroUsuarios);
+    return;
+  }
+
+  // 3️⃣ Cruzar manualmente
   lista.innerHTML = "";
 
-  data.forEach(p => {
+  presencas.forEach(p => {
+
+    const usuario = usuarios.find(u => u.id === p.user_id);
+
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
-      <p><b>Email:</b> ${p.usuarios.email}</p>
-      <p><b>Telefone:</b> ${p.usuarios.telefone}</p>
-      <p><b>Instituição:</b> ${p.usuarios.instituicao}</p>
+      <p><b>Email:</b> ${usuario ? usuario.email : "Não encontrado"}</p>
+      <p><b>Telefone:</b> ${usuario ? usuario.telefone : "-"}</p>
+      <p><b>Instituição:</b> ${usuario ? usuario.instituicao : "-"}</p>
       <p><b>Data:</b> ${p.data_presenca}</p>
       <hr>
     `;
