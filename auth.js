@@ -3,12 +3,17 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+//quando o usuario digitar (xx) xxx-xxx o que será salvo no banco de dados serão somente os numeros
+function limparTelefone(numero){
+  return numero.replace(/\D/g, "");
+}
+
 
 // ================= CADASTRO =================
 async function cadastrar(){
 
   const email = document.getElementById("email").value;
-  const telefone = document.getElementById("telefone").value;
+  const telefone = limparTelefone(document.getElementById("telefone").value); 
   const cpf = document.getElementById("cpf").value;
   const instituicao = document.getElementById("instituicao").value;
   const senha = document.getElementById("senha").value;
@@ -63,27 +68,22 @@ async function cadastrar(){
 // ================= LOGIN =================
 async function login(){
 
-  const loginInput = document.getElementById("login").value.trim();
+  let loginInput = document.getElementById("login").value.trim();
+  const telefoneDigitado = limparTelefone(loginInput);
   const senha = document.getElementById("senha").value.trim();
 
   let emailParaLogin = loginInput;
 
   // se não digitou nada
-if(!loginInput){
-  document.getElementById("msg").innerText = "Digite email ou telefone";
-  return;
-}
-
 if(!loginInput.includes("@")){
 
   const { data, error } = await supabaseClient
     .from("usuarios")
     .select("email")
-    .eq("telefone", loginInput)
-    .single();
+    .eq("telefone", telefoneDigitado)
+    .maybeSingle();
 
-  // erro de consulta ou telefone não existe
-  if(error || !data){
+  if(!data){
     document.getElementById("msg").innerText = "Email/Telefone ou senha inválidos";
     return;
   }
