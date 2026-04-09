@@ -1,38 +1,70 @@
 body{
-  font-family: Arial;
+  font-family: Arial, Helvetica, sans-serif;
   background:#0e0068;
   display:flex;
   justify-content:center;
   align-items:center;
-  height:100vh;
+  min-height:100vh;
+  margin:0;
   color:white;
+  padding:15px;
 }
 
+/* CARD RESPONSIVO */
 .card{
   background:#050036;
-  padding:30px;
-  border-radius:12px;
-  width:320px;
+  padding:25px;
+  border-radius:14px;
+  width:100%;
+  max-width:380px;
   text-align:center;
+  box-shadow:0 0 20px rgba(0,0,0,0.4);
 }
 
+/* INPUTS */
 input{
   width:100%;
-  padding:10px;
-  margin:8px 0;
-  border-radius:6px;
+  padding:14px;
+  margin:10px 0;
+  border-radius:8px;
   border:none;
+  font-size:16px; /* evita zoom automático no iPhone */
 }
 
+/* BOTÕES */
 button{
   background:#22c55e;
   border:none;
-  padding:12px;
-  width:105%;
-  border-radius:100px;
+  padding:14px;
+  width:100%;
+  border-radius:10px;
   color:white;
   font-weight:bold;
+  font-size:16px;
   cursor:pointer;
 }
 
-a{ color:#38bdf8; }
+button:hover{
+  background:#16a34a;
+}
+
+a{
+  color:#38bdf8;
+  text-decoration:none;
+}
+
+hr{
+  margin:25px 0;
+  opacity:0.3;
+}
+
+/* 📱 Ajustes extras para telas muito pequenas */
+@media (max-width: 400px){
+  .card{
+    padding:18px;
+  }
+
+  h1,h2{
+    font-size:20px;
+  }
+}
